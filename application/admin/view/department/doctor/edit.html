@@ -1,0 +1,145 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label for="c-unit" class="control-label col-xs-12 col-sm-2">{:__('所属单位')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-unit" class="form-control" name="row[unit]" type="text"
+                   value="{$row.unit}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('所在科室')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <select name="row[department_id]" class="form-control">
+                {foreach name="departments" item="vo"}
+                <option value="{$vo.id}" {in name="$vo.id" value="$row.department_id"}selected{/in}>{$vo.name}</option>
+                {/foreach}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-username" class="control-label col-xs-12 col-sm-2">{:__('姓名')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-username" data-rule="required" class="form-control" name="row[name]" type="text"
+                   value="{$row.name}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-mobile" class="control-label col-xs-12 col-sm-2">{:__('手机号')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-mobile" data-rule="required" class="form-control" name="row[mobile]" type="text"
+                   value="{$row.mobile}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否全职')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            {:build_radios('row[is_alltime]', [1=>__('是'), 2=>__('否')], $row['is_alltime'])}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('医生性别')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            {:build_radios('row[sex]', [1=>__('男'), 2=>__('女')], $row['sex'])}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('医生状态')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            {:build_radios('row[status]', ['normal'=>__('Normal'), 'hidden'=>__('Hidden')], $row['status'])}
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="c-birthday" class="control-label col-xs-12 col-sm-2">{:__('出生日期')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-birthday" class="form-control" name="row[birthday]" type="text"
+                   value="{$row.birthday}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-job" class="control-label col-xs-12 col-sm-2">{:__('职务')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-job" class="form-control" name="row[job]" type="text"
+                   value="{$row.job}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-practice" class="control-label col-xs-12 col-sm-2">{:__('执业职称')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-practice" class="form-control" name="row[practice]" type="text"
+                   value="{$row.practice}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-phone" class="control-label col-xs-12 col-sm-2">{:__('科室电话')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-phone" class="form-control" name="row[department][phone]" type="text"
+                   value="{$row.department.phone}" readonly>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-description" class="control-label col-xs-12 col-sm-2">{:__('医生简介')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-description" data-rule="required" class="form-control" name="row[description]" type="text"
+                   value="{$row.description}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-expertise_area" class="control-label col-xs-12 col-sm-2">{:__('擅长领域')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-expertise_area" data-rule="" class="form-control" name="row[expertise_area]" type="text"
+                   value="{$row.expertise_area}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-expertise_disease" class="control-label col-xs-12 col-sm-2">{:__('擅长疾病')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-expertise_disease" data-rule="" class="form-control" name="row[expertise_disease]" type="text"
+                   value="{$row.expertise_disease}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="c-avatar" class="control-label col-xs-12 col-sm-2">{:__('头像')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-avatar" data-rule="" class="form-control" size="50" name="row[image]" type="text"
+                       value="{$row.image}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-avatar" class="btn btn-danger plupload"
+                                  data-input-id="c-avatar"
+                                  data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                                  data-multiple="false" data-preview-id="p-avatar"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-avatar" class="btn btn-primary fachoose"
+                                  data-input-id="c-avatar" data-mimetype="image/*" data-multiple="false"><i
+                            class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-avatar"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-avatar"></ul>
+        </div>
+    </div>
+
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--suppress JSDeprecatedSymbols -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>问诊登录页面</title>
+    <script type="text/javascript" src="/static/service/js/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="/static/service/js/layui/layui.js"></script>
+    <link href="/static/service/css/login.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div class="login_box">
+    <div class="login_l_img"><img src="/static/service/images/login-img.png"/></div>
+    <div class="login">
+        <div class="login_logo"><a href="javascript:void(0)"><img src="/static/service/images/login_logo.png"/></a>
+        </div>
+        <div class="login_name">
+            <p>问诊登录页面</p>
+        </div>
+        <div class="login-form">
+            <input name="username" type="text" placeholder="密码" id="u">
+            <input name="password" type="password" id="p" placeholder="密码"/>
+            <input value="登录" style="width:100%;" type="button" id="login">
+        </div>
+    </div>
+    <div class="copyright"><a href="http://baidu.com" target="_blank" style="color:white;">北斗星耳鼻喉医院</a>
+    </div>
+</div>
+<script>
+    document.onkeydown = function (event) {
+        let e = event || window.event || arguments.callee.caller.arguments[0];
+        if (e && e.keyCode === 13) { // 响应enter键
+            doLogin();
+        }
+    };
+
+    $(function () {
+        $("#login").click(function () {
+            doLogin();
+        });
+    });
+
+    function doLogin() {
+        layui.use(['layer'], function () {
+            let layer = layui.layer;
+            layer.ready(function () {
+                let user_name = $("#u").val();
+                let password = $("#p").val();
+
+                if ('' === user_name) {
+                    layer.tips('请输入用户名', '#u');
+                    return false;
+                }
+
+                if ('' === password) {
+                    layer.tips('请输入密码', '#p');
+                    return false;
+                }
+
+                let index = layer.load(0, {shade: false});
+                $.post('/service/login/doLogin',
+                    {username: user_name, password: password},
+                    function (res) {
+                        layer.close(index);
+                        if (1 === res.code) {
+                            window.location.href = res.data;
+                        } else {
+                            return layer.msg(res.msg, {icon: 2, anim: 6});
+                        }
+                    }, 'json');
+            });
+        });
+    }
+</script>
+</body>
+</html>
