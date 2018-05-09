@@ -55,4 +55,5 @@ return [
     'Send a test message'         => '发送测试邮件',
     'This is a test mail content' => '这是一封测试邮件,用于测试邮件配置是否正常!',
     'This is a test mail'         => '这是一封测试邮件',
+    'Please input your email'     => '请输入测试接收者邮箱',
 ];

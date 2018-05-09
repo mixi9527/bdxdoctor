@@ -20,6 +20,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             pageList: [10, 25, 50, 'All'],
             pagination: true,
             clickToSelect: true, //是否启用点击选中
+            dblClickToEdit: true, //是否启用双击编辑
             singleSelect: false, //是否启用单选
             showRefresh: false,
             locale: 'zh-CN',
@@ -43,7 +44,6 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 import_url: '',
                 multi_url: '',
                 dragsort_url: 'ajax/weigh',
-                synchronize_url: ''
             }
         },
         // Bootstrap-table 列配置
@@ -55,8 +55,6 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             firsttd: 'tbody tr td:first-child:not(:has(div.card-views))',
             toolbar: '.toolbar',
             refreshbtn: '.btn-refresh',
-            // 新增手动同步按钮(by 张佳佩)
-            manualSynchronize: '.btn-synchronize',
             addbtn: '.btn-add',
             editbtn: '.btn-edit',
             delbtn: '.btn-del',
@@ -116,17 +114,16 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 //当刷新表格时
                 table.on('refresh.bs.table', function (e, settings, data) {
                     $(Table.config.refreshbtn, toolbar).find(".fa").addClass("fa-spin");
-                    $(Table.config.manualSynchronize, toolbar).find(".fa").addClass("fa-spin");
                 });
-
-                //当双击单元格时
-                table.on('dbl-click-row.bs.table', function (e, row, element, field) {
-                    $(Table.config.editonebtn, element).trigger("click");
-                });
+                if (options.dblClickToEdit) {
+                    //当双击单元格时
+                    table.on('dbl-click-row.bs.table', function (e, row, element, field) {
+                        $(Table.config.editonebtn, element).trigger("click");
+                    });
+                }
                 //当内容渲染完成后
                 table.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(Table.config.refreshbtn, toolbar).find(".fa").removeClass("fa-spin");
-                    $(Table.config.manualSynchronize, toolbar).find(".fa").removeClass("fa-spin");
                     $(Table.config.disabledbtn, toolbar).toggleClass('disabled', true);
                     if ($(Table.config.firsttd, table).find("input[type='checkbox'][data-index]").size() > 0) {
                         // 挺拽选择,需要重新绑定事件
@@ -164,17 +161,6 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 // 刷新按钮事件
                 $(toolbar).on('click', Table.config.refreshbtn, function () {
                     table.bootstrapTable('refresh');
-                });
-                // 同步按钮事件(by 张佳佩)
-                $(toolbar).on('click', Table.config.manualSynchronize, function () {
-                    var element = $("a.btn-synchronize", this);
-                    var data = table.bootstrapTable('getData');
-                    var params = {
-                        url: table.bootstrapTable('getOptions').extend.synchronize_url
-                    };
-                    Fast.api.ajax(params, function () {
-                        table.bootstrapTable('refresh');
-                    });
                 });
                 // 添加按钮事件
                 $(toolbar).on('click', Table.config.addbtn, function () {
@@ -417,7 +403,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     return '<div class="input-group input-group-sm" style="width:250px;margin:0 auto;"><input type="text" class="form-control input-sm" value="' + value + '"><span class="input-group-btn input-group-sm"><a href="' + value + '" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-link"></i></a></span></div>';
                 },
                 search: function (value, row, index) {
-                    return '<a href="javascript:;" class="searchit" data-field="' + this.field + '" data-value="' + value + '">' + value + '</a>';
+                    return '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', value) + '" data-field="' + this.field + '" data-value="' + value + '">' + value + '</a>';
                 },
                 addtabs: function (value, row, index) {
                     var url = Table.api.replaceurl(this.url, row, this.table);
@@ -470,6 +456,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                             name: 'dragsort',
                             icon: 'fa fa-arrows',
                             title: __('Drag to sort'),
+                            extend: 'data-toggle="tooltip"',
                             classname: 'btn btn-xs btn-primary btn-dragsort'
                         });
                     }
@@ -478,6 +465,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                             name: 'edit',
                             icon: 'fa fa-pencil',
                             title: __('Edit'),
+                            extend: 'data-toggle="tooltip"',
                             classname: 'btn btn-xs btn-success btn-editone',
                             url: options.extend.edit_url
                         });
@@ -487,6 +475,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                             name: 'del',
                             icon: 'fa fa-trash',
                             title: __('Del'),
+                            extend: 'data-toggle="tooltip"',
                             classname: 'btn btn-xs btn-danger btn-delone'
                         });
                     }
